@@ -49,11 +49,14 @@ db_pool = pooling.MySQLConnectionPool(
     pool_name="taumac_pool",
     pool_size=10,
     pool_reset_session=True,
-    host="localhost",
-    user="root",
-    passwd="password",
-    database="taumacDB"
+    host=os.getenv("DB_HOST"),
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME"),
+    port=int(os.getenv("DB_PORT", "3306")),
+    ssl_ca=os.getenv("DB_SSL_CA")
 )
+
 
 
 
