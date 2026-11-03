@@ -54,7 +54,7 @@ db_pool = pooling.MySQLConnectionPool(
     password=os.getenv("DB_PASSWORD"),
     database=os.getenv("DB_NAME"),
     port=int(os.getenv("DB_PORT", "3306")),
-    ssl_ca=os.getenv("DB_SSL_CA")
+    ssl_ca=os.path.join(os.path.dirname(__file__), "ca.pem")
 )
 
 
