@@ -1,0 +1,12 @@
+Flask
+gunicorn
+mysql-connector-python
+pandas
+numpy
+python-dotenv
+pyparsing
+scipy
+matplotlib
+scikit-learn
+umap-learn
+pyclustertend
