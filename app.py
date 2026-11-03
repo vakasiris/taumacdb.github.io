@@ -348,174 +348,20 @@ near the shores/ rocks inside cavities of coastal lines','Rocks/rock cavities ne
     # Affinity Propagation
     results = run_ap(df,distance_matrix,similarity_matrix)
 
-    from metrics import compare_ap_hierarchical
+    
 
-    # Algorithm comparison
-    print("\nComparing AP vs Hierarchical...")
-    results_, ap_sil = compare_ap_hierarchical(
-        distance_matrix,
-        strain_info,
-        results['labels'],
-        results['n_clusters'],
-        save_dir='.'
-    )
 
-    import matplotlib.pyplot as plt
-    import matplotlib.patches as mpatches
+
+  
     ap_labels=results['labels']
     embedding=results['embedding']
     n = len(embedding)
-    save_path = 'umap_lifestyle.png'
+   
 
-    # Get lifestyle for each strain
-    # assuming lifestyle is a column in df
-    # and df index matches embedding order
+    
 
-    lifestyles = df['lifestyle'].values
-
-    # Define colors
-    lifestyle_colors = {
-        'Benthic': '#2ecc71',  # green
-        'Planktic': '#3498db',  # blue
-        'Planktonic': '#3498db',  # blue (handle both spellings)
-        None: '#bdc3c7',  # gray for unknown
-        'nan': '#bdc3c7'
-    }
-
-    # Map lifestyle to color for each strain
-    point_colors = []
-    for ls in lifestyles:
-        if pd.isna(ls) or ls is None:
-            point_colors.append('#bdc3c7')
-        else:
-            point_colors.append(
-                lifestyle_colors.get(str(ls), '#bdc3c7')
-            )
-
-    # Cluster colors (for second plot)
-    cluster_palette = [
-        '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
-        '#1abc9c', '#e67e22', '#34495e', '#e91e63', '#00bcd4',
-        '#8bc34a', '#ff5722', '#607d8b', '#795548', '#ff9800',
-        '#673ab7', '#009688', '#f44336', '#2196f3', '#4caf50',
-        '#ffeb3b', '#ff5252', '#69f0ae', '#40c4ff', '#ea80fc'
-    ]
-    cluster_colors = [
-        cluster_palette[int(l) % len(cluster_palette)]
-        for l in ap_labels
-    ]
-    fig, axes = plt.subplots(1, 2, figsize=(18, 8))
-    ax = axes[0]
-
-    ax.scatter(
-        embedding[:, 0],
-        embedding[:, 1],
-        c=point_colors,
-        s=60,
-        alpha=0.8,
-        edgecolors='white',
-        linewidths=0.5
-    )
-
-    # Legend
-    legend_elements = [
-        mpatches.Patch(color='#2ecc71', label='Benthic'),
-        mpatches.Patch(color='#3498db', label='Planktic'),
-        mpatches.Patch(color='#bdc3c7', label='Unknown')
-    ]
-    ax.legend(handles=legend_elements, fontsize=11,
-              loc='upper right')
-
-    ax.set_title('UMAP Embedding\nColored by Lifestyle',
-                 fontsize=13, fontweight='bold')
-    ax.set_xlabel('UMAP 1', fontsize=11)
-    ax.set_ylabel('UMAP 2', fontsize=11)
-    ax.set_facecolor('#f8f9fa')
-    ax.grid(True, alpha=0.3)
-
-    lifestyles = df['lifestyle'].values
-
-    cluster_palette = [
-        '#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
-        '#1abc9c', '#e67e22', '#34495e', '#e91e63', '#00bcd4',
-        '#8bc34a', '#ff5722', '#607d8b', '#795548', '#ff9800',
-        '#673ab7', '#009688', '#f44336', '#2196f3', '#4caf50'
-    ]
-
-    fig, ax = plt.subplots(figsize=(12, 9))
-
-    # Plot each lifestyle group separately with different markers
-    groups = {
-        'Benthic': ('o', 'Benthic'),  # circle
-        'Planktic': ('^', 'Planktic'),  # triangle up
-
-
-    }
-
-    plotted_labels = set()
-
-    for i in range(len(embedding)):
-        ls = lifestyles[i]
-
-        if pd.isna(ls) or ls is None or str(ls) == 'nan':
-            marker = 's'
-            label = 'Unknown'
-        else:
-            ls_str = str(ls)
-            marker = groups.get(ls_str, ('s', 'Unknown'))[0]
-            label = groups.get(ls_str, ('s', 'Unknown'))[1]
-
-        cluster_id = int(ap_labels[i])
-        color = cluster_palette[cluster_id % len(cluster_palette)]
-
-        # Add label only once per lifestyle group
-        plot_label = label if label not in plotted_labels else None
-        plotted_labels.add(label)
-
-        ax.scatter(
-            embedding[i, 0],
-            embedding[i, 1],
-            c=color,
-            marker=marker,
-            s=80,
-            alpha=0.85,
-            edgecolors='white',
-            linewidths=0.5,
-            label=plot_label
-        )
-
-    # Lifestyle legend (shapes)
-    from matplotlib.lines import Line2D
-    shape_legend = [
-        Line2D([0], [0], marker='o', color='gray',
-               markersize=8, label='Benthic',
-               linestyle='None'),
-        Line2D([0], [0], marker='^', color='gray',
-               markersize=8, label='Planktic',
-               linestyle='None'),
-
-    ]
-
-    ax.legend(handles=shape_legend,
-              title='Lifestyle', fontsize=10,
-              loc='upper right')
-
-    ax.set_title(
-        'UMAP Embedding\n'
-        'Color = AP Cluster, Shape = Lifestyle',
-        fontsize=13, fontweight='bold'
-    )
-    ax.set_xlabel('UMAP 1', fontsize=11)
-    ax.set_ylabel('UMAP 2', fontsize=11)
-    ax.set_facecolor('#f8f9fa')
-    ax.grid(True, alpha=0.3)
-
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    plt.show()
-    print(f"Overlay plot saved to {save_path}")
-
-
+    
+   
 
 
     col_types = {}
