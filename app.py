@@ -22,7 +22,7 @@ from pyparsing import restOfLine
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
-from dbinit import init_db
+
 
 from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
 import matplotlib.pyplot as plt
