@@ -95,10 +95,10 @@
         <figure class="slide {% if loop.first %}active{% endif %}">
 
             <img
-            src="{{ url_for('static', filename='microscopy_photos/' + photo.image_filepath) }}"
-            alt="{{ photo.photo_desc or 'Strain image' }}"
-            onclick= "openModal(this.src, '{{ photo.photo_desc|default("Strain image")|escape }}')"
-            class="slider-image"
+            src="/microscopy_photos/{{ photo.image_filepath }}"
+    alt="{{ photo.photo_desc or 'Strain image' }}"
+    onclick="openModal(this.src, '{{ photo.photo_desc|default('Strain image')|escape }}')"
+    class="slider-image"
 >
 
             {% if photo.photo_desc %}
