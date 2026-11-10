@@ -1,11 +1,8 @@
 import numpy as np
 from sklearn.cluster import AffinityPropagation
 from sklearn import metrics
-import matplotlib.pyplot as plt
 import umap
-from sklearn.metrics import davies_bouldin_score
-from sklearn.metrics import calinski_harabasz_score
-from pyclustertend.visual_assessment_of_tendency import compute_ivat_ordered_dissimilarity_matrix
+
 
 
 
@@ -37,14 +34,7 @@ def run_ap(df,distance_matrix,similarity_matrix, damping=0.9, max_iter=400):
 
 
 
-    print("Silhouette Coefficient: %0.3f"
-          %
-          metrics.silhouette_score(
-    distance_matrix,
-    ap.labels_,
-    metric='precomputed'
-)
-    )
+    
 
 
 
@@ -69,15 +59,7 @@ def run_ap(df,distance_matrix,similarity_matrix, damping=0.9, max_iter=400):
 
 
     #Running some score tests here
-    db_score = davies_bouldin_score(embedding, labels)
-    print(f"  Davies Bouldin Score: {db_score}")
-
-    ch_score = calinski_harabasz_score(embedding, labels)
-    print(f"  Calinski Harabasz Score: {ch_score}")
-
-    d_prim=compute_ivat_ordered_dissimilarity_matrix(distance_matrix)
-    plt.imshow(d_prim, cmap='gray')
-    #plt.show()
+    
 
 
 
