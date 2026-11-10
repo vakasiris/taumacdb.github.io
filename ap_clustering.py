@@ -58,7 +58,7 @@ def run_ap(df,distance_matrix,similarity_matrix, damping=0.9, max_iter=400):
     print(f"  UMAP complete. Shape: {embedding.shape}")
 
 
-    #Running some score tests here
+    
     
 
 
