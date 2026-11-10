@@ -6,9 +6,7 @@ import numpy as np
 import io
 
 
-from clustering_results import build_full_results
-from gower_matrix import run_gower_matrix
-from ap_clustering import run_ap
+
 
 from profile_download import build_single_strain_csv, build_all_strains_csv
 
@@ -68,6 +66,10 @@ def clustering_page():
 
 @app.route('/api/get-clustering-data')
 def get_clustering_data():
+    from clustering_results import build_full_results
+    from gower_matrix import run_gower_matrix
+    from ap_clustering import run_ap
+    
     con = db_pool.get_connection()
     base_query=("""
     SELECT strain.id AS strain_id, strain.strain_code, CONCAT(view_strain_lineage.genus, ' ', view_strain_lineage.species) AS strain_name,view_strain_lineage.family,strain.temp_tolerance,
