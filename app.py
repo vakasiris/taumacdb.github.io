@@ -43,7 +43,7 @@ app = Flask(__name__)
 
 db_pool = pooling.MySQLConnectionPool(
     pool_name="taumac_pool",
-    pool_size=2,
+    pool_size=10,
     pool_reset_session=True,
     host=os.getenv("DB_HOST"),
     user=os.getenv("DB_USER"),
