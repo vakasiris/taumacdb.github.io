@@ -2146,7 +2146,7 @@ def search():
         
         OR view_strain_species_genus.strain_code LIKE %s
         
-         GROUP BY view_strain_species_genus.strain_id,view_strain_species_genus.strain_code,species_name, strain_profile.morph_description, taumacdb.strain_profile.cell_length_min, strain_profile.cell_length_avg, strain_profile.akinete_length_min, strain_profile.heterocyte_length_min, strain_profile.apical_cell_length_min, strain_profile.cyst_length_min, strain_profile.filament_length_min, strain_profile.helix_pitch_length_min, strain_profile.lifestyle, strain_profile.novel_taxon, strain_profile.temp_tolerance
+         GROUP BY view_strain_species_genus.strain_id,view_strain_species_genus.strain_code,species_name, strain_profile.morph_description, strain_profile.cell_length_min, strain_profile.cell_length_avg, strain_profile.akinete_length_min, strain_profile.heterocyte_length_min, strain_profile.apical_cell_length_min, strain_profile.cyst_length_min, strain_profile.filament_length_min, strain_profile.helix_pitch_length_min, strain_profile.lifestyle, strain_profile.novel_taxon, strain_profile.temp_tolerance
         
        
         
