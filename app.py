@@ -2131,28 +2131,114 @@ def search():
 
     if request.method == "POST":
 
-        sql_query = """ 
-        SELECT DISTINCT view_strain_species_genus.strain_id,CONCAT(view_strain_species_genus.genus_name, ' ', view_strain_species_genus.species_name) AS species_name,  view_strain_species_genus.strain_code,strain_profile.lifestyle,strain_profile.novel_taxon,strain_profile.temp_tolerance,strain_profile.morph_description,strain_profile.cell_length_min,strain_profile.cell_length_avg,strain_profile.akinete_length_min,strain_profile.heterocyte_length_min,strain_profile.apical_cell_length_min,strain_profile.cyst_length_min,strain_profile.filament_length_min,strain_profile.helix_pitch_length_min,
-        EXISTS(SELECT 1 FROM strain_profile WHERE strain_profile.strain_id = view_strain_species_genus.strain_id AND strain_profile.presence =1) AS has_toxins,
-        EXISTS(SELECT 1 FROM strain_profile WHERE strain_profile.strain_id = view_strain_species_genus.strain_id AND strain_profile.inhibition_zone_numeric > 0) AS antimic,
-        EXISTS(SELECT 1 FROM strain_profile WHERE strain_profile.strain_id = view_strain_species_genus.strain_id AND strain_profile.comp_presence =1) AS has_bioactive,
-        EXISTS(SELECT 1 FROM strain_profile WHERE strain_profile.strain_id = view_strain_species_genus.strain_id AND strain_profile.rate IS NOT NULL) AS has_growth_rate,
-        EXISTS(SELECT 1 FROM strain_profile WHERE strain_profile.strain_id = view_strain_species_genus.strain_id AND strain_profile.gene_name IS NOT NULL) AS has_gene_seq,
-        EXISTS(SELECT 1 FROM strain_profile WHERE strain_profile.strain_id = view_strain_species_genus.strain_id AND strain_profile.viable_cells_perc IS NOT NULL) AS has_tumor_data,
-        GROUP_CONCAT(DISTINCT strain_profile.gene_name ORDER BY strain_profile.gene_name SEPARATOR ', ') AS gene_names
-        FROM view_strain_species_genus
-        LEFT JOIN strain_profile ON strain_profile.strain_id = view_strain_species_genus.strain_id
-        WHERE CONCAT(view_strain_species_genus.genus_name, ' ', view_strain_species_genus.species_name) LIKE %s
-        
-        OR view_strain_species_genus.strain_code LIKE %s
-        
-         GROUP BY view_strain_species_genus.strain_id,view_strain_species_genus.strain_code,species_name, strain_profile.morph_description, strain_profile.cell_length_min, strain_profile.cell_length_avg, strain_profile.akinete_length_min, strain_profile.heterocyte_length_min, strain_profile.apical_cell_length_min, strain_profile.cyst_length_min, strain_profile.filament_length_min, strain_profile.helix_pitch_length_min, strain_profile.lifestyle, strain_profile.novel_taxon, strain_profile.temp_tolerance
-        
-       
-        
-        
-        """
+        sql_query = """
+            SELECT
+                v.strain_id,
+                CONCAT(v.genus_name, ' ', v.species_name) AS species_name,
+                v.strain_code,
 
+                s.lifestyle,
+                s.novel_taxon,
+                s.temp_tolerance,
+
+                m.morph_description,
+                mg.cell_length_min,
+                mg.cell_length_avg,
+                ma.akinete_length_min,
+                mh.heterocyte_length_min,
+                map.apical_cell_length_min,
+                mc.cyst_length_min,
+                mf.filament_length_min,
+                mhl.helix_pitch_length_min,
+
+                EXISTS (
+                    SELECT 1
+                    FROM toxin_production tp
+                    WHERE tp.strain_id = v.strain_id
+                      AND tp.presence = 1
+                ) AS has_toxins,
+
+                EXISTS (
+                    SELECT 1
+                    FROM antimicrobial_act_against a
+                    JOIN inhibition i ON i.antimic_id = a.id
+                    WHERE a.strain_id = v.strain_id
+                      AND i.inhibition_zone_numeric > 0
+                ) AS antimic,
+
+                EXISTS (
+                    SELECT 1
+                    FROM bioactive_comp_production bp
+                    WHERE bp.strain_id = v.strain_id
+                      AND bp.comp_presence = 1
+                ) AS has_bioactive,
+
+                EXISTS (
+                    SELECT 1
+                    FROM growth_rate_set gs
+                    JOIN growth_rate gr ON gr.growth_set_id = gs.id
+                    WHERE gs.strain_id = v.strain_id
+                      AND gr.rate IS NOT NULL
+                ) AS has_growth_rate,
+
+                EXISTS (
+                    SELECT 1
+                    FROM gene_sequence g
+                    WHERE g.strain_id = v.strain_id
+                      AND g.gene_name IS NOT NULL
+                ) AS has_gene_seq,
+
+                EXISTS (
+                    SELECT 1
+                    FROM against_tumor_cells atc
+                    JOIN effect_on_tumor et
+                        ON et.against_t_cell_id = atc.id
+                    WHERE atc.strain_id = v.strain_id
+                      AND et.viable_cells_perc IS NOT NULL
+                ) AS has_tumor_data,
+
+                (
+                    SELECT GROUP_CONCAT(
+                        DISTINCT g.gene_name
+                        ORDER BY g.gene_name
+                        SEPARATOR ', '
+                    )
+                    FROM gene_sequence g
+                    WHERE g.strain_id = v.strain_id
+                ) AS gene_names
+
+            FROM view_strain_species_genus v
+
+            LEFT JOIN strain s
+                ON s.id = v.strain_id
+
+            LEFT JOIN morphology m
+                ON m.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_general mg
+                ON mg.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_akinete ma
+                ON ma.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_heterocyte mh
+                ON mh.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_apical_cell map
+                ON map.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_cyst mc
+                ON mc.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_filament mf
+                ON mf.strain_id = v.strain_id
+
+            LEFT JOIN morphometry_helix mhl
+                ON mhl.strain_id = v.strain_id
+
+            WHERE CONCAT(v.genus_name, ' ', v.species_name) LIKE %s
+               OR v.strain_code LIKE %s
+        """
         wildcard = f"%{query}%"
 
 
