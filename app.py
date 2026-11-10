@@ -24,9 +24,7 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 
 
-from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
-import matplotlib.pyplot as plt
-from sklearn.metrics import silhouette_score
+
 
 
 _clustering_cache = {
