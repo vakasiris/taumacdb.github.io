@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import umap
+
 
 
 def get_cluster_defining_features(cluster_data, col_types, top_n=10):
